@@ -43,6 +43,8 @@ public class StudentService {
 
         List<StudentDTO> students = new ArrayList<>();
 
+        query = '%' + query + '%';
+
         try {
             PreparedStatement stm = connection.prepareStatement("SELECT * FROM student WHERE id LIKE ? OR name LIKE ? or address LIKE ? or contact LIKE ?");
             stm.setString(1, query);
