@@ -20,37 +20,14 @@ public class StudentServlet extends HttpServlet {
         String name = request.getParameter("name");
         String address = request.getParameter("address");
         String contact = request.getParameter("contact");
-
-        System.out.println("Do POST");
-
-        System.out.println(name);
-        System.out.println(address);
-        System.out.println(contact);
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String contact = request.getParameter("contact");
-
-        System.out.println("Do PUT");
+        Part picture = request.getPart("picture");
 
         System.out.println(name);
         System.out.println(address);
         System.out.println(contact);
+        System.out.println(picture.getSubmittedFileName());
+
+        picture.write("/home/ranjith-suranga/Desktop/uploaded/" + picture.getSubmittedFileName());
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String contact = request.getParameter("contact");
-
-        System.out.println("Do DELETE");
-
-        System.out.println(name);
-        System.out.println(address);
-        System.out.println(contact);
-    }
 }
