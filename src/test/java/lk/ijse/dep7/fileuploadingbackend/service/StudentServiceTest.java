@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +35,18 @@ class StudentServiceTest {
     @Test
     void saveStudent() throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get("/home/ranjith-suranga/Desktop/chandima.jpeg"));
-        String id = studentService.saveStudent(new StudentDTO("Chandima Herath", "Jaffna","077-1234567", new String(bytes)));
+        String id = studentService.saveStudent(new StudentDTO("Chandima Herath", "Jaffna","077-1234567", bytes));
         assertTrue(id.matches("SID-\\d{3,}"));
+    }
+
+    @Test
+    void readStudent() throws SQLException, IOException {
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM student WHERE id=6");
+        rst.next();
+        Blob picture = rst.getBlob("picture");
+        byte[] bytes = picture.getBytes(1, (int) picture.length());
+        System.out.println(bytes.length);
+        Files.write(Paths.get("/home/ranjith-suranga/Desktop/uploaded/chandima.jpeg"), bytes);
     }
 }

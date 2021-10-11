@@ -2,6 +2,7 @@ package lk.ijse.dep7.fileuploadingbackend.service;
 
 import lk.ijse.dep7.fileuploadingbackend.dto.StudentDTO;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.sql.*;
 
 public class StudentService {
@@ -21,7 +22,7 @@ public class StudentService {
             stm.setObject(1, student.getName());
             stm.setObject(2, student.getAddress());
             stm.setObject(3, student.getContact());
-            stm.setObject(4, student.getPicture());
+            stm.setObject(4, new SerialBlob(student.getPicture()));
 
             if (stm.executeUpdate() == 1) {
                 ResultSet keys = stm.getGeneratedKeys();

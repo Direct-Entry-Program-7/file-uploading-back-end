@@ -7,19 +7,19 @@ public class StudentDTO implements Serializable {
     private String name;
     private String address;
     private String contact;
-    private String picture;
+    private byte[] picture;
 
     public StudentDTO() {
     }
 
-    public StudentDTO(String name, String address, String contact, String picture) {
+    public StudentDTO(String name, String address, String contact, byte[] picture) {
         this.name = name;
         this.address = address;
         this.contact = contact;
         this.picture = picture;
     }
 
-    public StudentDTO(String id, String name, String address, String contact, String picture) {
+    public StudentDTO(String id, String name, String address, String contact, byte[] picture) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -59,11 +59,11 @@ public class StudentDTO implements Serializable {
         this.contact = contact;
     }
 
-    public String getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 

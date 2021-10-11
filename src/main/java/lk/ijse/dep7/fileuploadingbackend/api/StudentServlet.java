@@ -45,7 +45,7 @@ public class StudentServlet extends HttpServlet {
             byte[] bytes = new byte[is.available()];
             is.read(bytes);
 
-            StudentDTO student = new StudentDTO(name,address, contact, new String(bytes));
+            StudentDTO student = new StudentDTO(name,address, contact, bytes);
             studentService.saveStudent(student);
         } catch (SQLException ex) {
             ex.printStackTrace();
