@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 @MultipartConfig
@@ -38,13 +39,17 @@ public class StudentServlet extends HttpServlet {
         String contact = request.getParameter("contact");
         Part picture = request.getPart("picture");
 
-        StudentService studentService = new StudentService();
-        InputStream is = picture.getInputStream();
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
+        try (Connection connection = dataSource.getConnection()) {
+            StudentService studentService = new StudentService(connection);
+            InputStream is = picture.getInputStream();
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes);
 
-        StudentDTO student = new StudentDTO(name,address, contact, new String(bytes));
-        studentService.saveStudent(student);
+            StudentDTO student = new StudentDTO(name,address, contact, new String(bytes));
+            studentService.saveStudent(student);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
