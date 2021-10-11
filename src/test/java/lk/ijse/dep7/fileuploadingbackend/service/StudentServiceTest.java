@@ -27,7 +27,7 @@ class StudentServiceTest {
 
     @AfterEach
     void tearDown() throws SQLException {
-//        connection.rollback();
+        connection.rollback();
         connection.setAutoCommit(true);
         connection.close();
     }
@@ -39,14 +39,4 @@ class StudentServiceTest {
         assertTrue(id.matches("SID-\\d{3,}"));
     }
 
-    @Test
-    void readStudent() throws SQLException, IOException {
-        Statement stm = connection.createStatement();
-        ResultSet rst = stm.executeQuery("SELECT * FROM student WHERE id=6");
-        rst.next();
-        Blob picture = rst.getBlob("picture");
-        byte[] bytes = picture.getBytes(1, (int) picture.length());
-        System.out.println(bytes.length);
-        Files.write(Paths.get("/home/ranjith-suranga/Desktop/uploaded/chandima.jpeg"), bytes);
-    }
 }
