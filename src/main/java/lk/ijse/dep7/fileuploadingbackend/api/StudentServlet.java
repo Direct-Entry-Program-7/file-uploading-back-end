@@ -1,4 +1,4 @@
-package lk.ijse.dep7.fileuploadingbackend;
+package lk.ijse.dep7.fileuploadingbackend.api;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.*;
@@ -19,22 +19,6 @@ public class StudentServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/cp")
     private DataSource dataSource;
-
-    @Override
-    public void init() throws ServletException {
-//        try {
-//            InitialContext ctx = new InitialContext();
-//            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/cp");
-//            System.out.println(ds.getConnection());
-//        } catch (NamingException | SQLException e) {
-//            e.printStackTrace();
-//        }
-        try {
-            System.out.println(dataSource.getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
