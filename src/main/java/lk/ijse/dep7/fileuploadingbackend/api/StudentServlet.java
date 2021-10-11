@@ -4,13 +4,18 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import lk.ijse.dep7.fileuploadingbackend.dto.StudentDTO;
+import lk.ijse.dep7.fileuploadingbackend.service.StudentService;
 
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 @MultipartConfig
@@ -33,12 +38,13 @@ public class StudentServlet extends HttpServlet {
         String contact = request.getParameter("contact");
         Part picture = request.getPart("picture");
 
-        System.out.println(name);
-        System.out.println(address);
-        System.out.println(contact);
-        System.out.println(picture.getSubmittedFileName());
+        StudentService studentService = new StudentService();
+        InputStream is = picture.getInputStream();
+        byte[] bytes = new byte[is.available()];
+        is.read(bytes);
 
-        picture.write("/home/ranjith-suranga/Desktop/uploaded/" + picture.getSubmittedFileName());
+        StudentDTO student = new StudentDTO(name,address, contact, new String(bytes));
+        studentService.saveStudent(student);
     }
 
 }

@@ -1,19 +1,25 @@
 package lk.ijse.dep7.fileuploadingbackend.dto;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class StudentDTO implements Serializable {
     private String id;
     private String name;
     private String address;
     private String contact;
-    private byte[] picture;
+    private String picture;
 
     public StudentDTO() {
     }
 
-    public StudentDTO(String id, String name, String address, String contact, byte[] picture) {
+    public StudentDTO(String name, String address, String contact, String picture) {
+        this.name = name;
+        this.address = address;
+        this.contact = contact;
+        this.picture = picture;
+    }
+
+    public StudentDTO(String id, String name, String address, String contact, String picture) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -53,11 +59,11 @@ public class StudentDTO implements Serializable {
         this.contact = contact;
     }
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
@@ -68,7 +74,7 @@ public class StudentDTO implements Serializable {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", contact='" + contact + '\'' +
-                ", picture=" + Arrays.toString(picture) +
+                ", picture='" + picture + '\'' +
                 '}';
     }
 }
