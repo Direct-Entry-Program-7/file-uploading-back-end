@@ -1,19 +1,17 @@
 package lk.ijse.dep7.fileuploadingbackend.api;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import lk.ijse.dep7.fileuploadingbackend.dto.StudentDTO;
 import lk.ijse.dep7.fileuploadingbackend.service.StudentService;
 
-import javax.naming.InitialContext;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -34,22 +32,62 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getContentType() == null || !request.getContentType().startsWith("multipart/form-data")){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request");
+            return;
+        }
+
         String name = request.getParameter("name");
         String address = request.getParameter("address");
         String contact = request.getParameter("contact");
         Part picture = request.getPart("picture");
 
-        try (Connection connection = dataSource.getConnection()) {
-            StudentService studentService = new StudentService(connection);
-            InputStream is = picture.getInputStream();
-            byte[] bytes = new byte[is.available()];
-            is.read(bytes);
+        /* Server Side Validation */
+        String errorMsg = null;
 
-            StudentDTO student = new StudentDTO(name,address, contact, bytes);
-            studentService.saveStudent(student);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        if (name == null || address == null) {
+            errorMsg = "Name or Address can't be empty";
+        } else if (!name.trim().matches("[A-Za-z ]+")) {
+            errorMsg = "Invalid name";
+        } else if (address.trim().length() < 3) {
+            errorMsg = "Invalid address";
+        } else if (contact !=null && !contact.trim().matches("[0-9 ]{7,}")) {
+            errorMsg = "Invalid contact number";
+        } else {
+
+            pic:
+            if (picture != null) {
+                if (!picture.getContentType().startsWith("image")){
+                    errorMsg = "Invalid picture";
+                    break pic;
+                }
+
+                try {
+                    InputStream is = picture.getInputStream();
+                    byte[] bytes = new byte[is.available()];
+
+                    is.read(bytes);
+                } catch (Exception e) {
+                    errorMsg = "Failed to read the picture";
+                }
+            }
         }
+
+        if (errorMsg != null){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+            return;
+        }
+
+//        try (Connection connection = dataSource.getConnection()) {
+//            StudentService studentService = new StudentService(connection);
+//
+//
+//            StudentDTO student = new StudentDTO(name, address, contact, bytes);
+//            studentService.saveStudent(student);
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//        }
     }
 
 }
