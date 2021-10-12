@@ -68,6 +68,7 @@ public class StudentServlet extends HttpServlet {
             picture = request.getPart("picture");
         }catch(IOException ex){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request");
+            ex.printStackTrace();
             return;
         }
 
@@ -114,6 +115,7 @@ public class StudentServlet extends HttpServlet {
             String id = studentService.saveStudent(student);
 
             response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_CREATED);
             response.getWriter().write(JsonbBuilder.create().toJson(id));
 
         } catch (SQLException ex) {
