@@ -24,7 +24,7 @@ public class StudentService {
             stm.setString(1, student.getName());
             stm.setString(2, student.getAddress());
             stm.setString(3, student.getContact());
-            stm.setBlob(4, new SerialBlob(student.getPicture()));
+            stm.setBlob(4, student.getPicture() != null ? new SerialBlob(student.getPicture()) : null);
 
             if (stm.executeUpdate() == 1) {
                 ResultSet keys = stm.getGeneratedKeys();

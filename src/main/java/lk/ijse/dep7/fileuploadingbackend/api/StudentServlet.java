@@ -42,6 +42,7 @@ public class StudentServlet extends HttpServlet {
         String address = null;
         String contact = null;
         Part picture = null;
+        byte[] picBytes = null;
 
         try {
             name = request.getParameter("name");
@@ -53,7 +54,6 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-        /* Server Side Validation */
         String errorMsg = null;
 
         if (name == null || address == null) {
@@ -75,9 +75,9 @@ public class StudentServlet extends HttpServlet {
 
                 try {
                     InputStream is = picture.getInputStream();
-                    byte[] bytes = new byte[is.available()];
+                    picBytes = new byte[is.available()];
 
-                    is.read(bytes);
+                    is.read(picBytes);
                 } catch (Exception e) {
                     errorMsg = "Failed to read the picture";
                 }
@@ -89,15 +89,20 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-//        try (Connection connection = dataSource.getConnection()) {
-//            StudentService studentService = new StudentService(connection);
-//
-//
-//            StudentDTO student = new StudentDTO(name, address, contact, bytes);
-//            studentService.saveStudent(student);
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
+        /* Validation is okay */
+
+        try (Connection connection = dataSource.getConnection()) {
+            StudentService studentService = new StudentService(connection);
+            StudentDTO student = new StudentDTO(name, address, contact, picBytes);
+            String id = studentService.saveStudent(student);
+
+            response.setContentType("application/json");
+            response.getWriter().write("\"" + id + "\"");
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to obtain a connection");
+        }
     }
 
 }
