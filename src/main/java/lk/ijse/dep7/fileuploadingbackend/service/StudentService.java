@@ -55,7 +55,11 @@ public class StudentService {
 
             while (rst.next()) {
                 Blob picture = rst.getBlob("picture");
-                byte[] bytes = picture.getBytes(1, (int) picture.length());
+                byte[] bytes = null;
+
+                if (picture != null){
+                    bytes = picture.getBytes(1, (int) picture.length());
+                }
 
                 students.add(new StudentDTO(
                         String.format("SID-%03d", rst.getInt(1)),

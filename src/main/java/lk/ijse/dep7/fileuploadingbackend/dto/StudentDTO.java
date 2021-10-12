@@ -1,5 +1,7 @@
 package lk.ijse.dep7.fileuploadingbackend.dto;
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 import java.io.Serializable;
 
 public class StudentDTO implements Serializable {
@@ -7,6 +9,7 @@ public class StudentDTO implements Serializable {
     private String name;
     private String address;
     private String contact;
+    @JsonbTransient
     private byte[] picture;
 
     public StudentDTO() {

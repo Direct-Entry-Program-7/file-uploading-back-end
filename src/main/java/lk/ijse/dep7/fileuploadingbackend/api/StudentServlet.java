@@ -1,6 +1,10 @@
 package lk.ijse.dep7.fileuploadingbackend.api;
 
 import jakarta.annotation.Resource;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 @MultipartConfig
 @WebServlet(name = "StudentServlet", value = "/students", loadOnStartup = 0)
@@ -26,8 +31,20 @@ public class StudentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Hello Servlet");
-        System.out.println(request.getParameter("q"));
+        String query = request.getParameter("q");
+
+        try (Connection connection = dataSource.getConnection()) {
+            StudentService studentService = new StudentService(connection);
+
+            List<StudentDTO> students = studentService.findStudents(query != null ? query : "");
+
+            response.setContentType("application/json");
+            response.getWriter().println(JsonbBuilder.create().toJson(students));
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to obtain a connection");
+        }
     }
 
     @Override
