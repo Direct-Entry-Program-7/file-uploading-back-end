@@ -38,10 +38,19 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String contact = request.getParameter("contact");
-        Part picture = request.getPart("picture");
+        String name = null;
+        String address = null;
+        String contact = null;
+        Part picture = null;
+        try {
+            name = request.getParameter("name");
+            address = request.getParameter("address");
+            contact = request.getParameter("contact");
+            picture = request.getPart("picture");
+        }catch(IOException ex){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request");
+            return;
+        }
 
         /* Server Side Validation */
         String errorMsg = null;
