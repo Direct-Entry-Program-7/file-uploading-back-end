@@ -114,7 +114,7 @@ public class StudentServlet extends HttpServlet {
             String id = studentService.saveStudent(student);
 
             response.setContentType("application/json");
-            response.getWriter().write("\"" + id + "\"");
+            response.getWriter().write(JsonbBuilder.create().toJson(id));
 
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -1,8 +1,10 @@
 package lk.ijse.dep7.fileuploadingbackend.dto;
 
+import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.json.bind.annotation.JsonbTransient;
 
 import java.io.Serializable;
+import java.util.Base64;
 
 public class StudentDTO implements Serializable {
     private String id;
@@ -68,6 +70,15 @@ public class StudentDTO implements Serializable {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+
+    @JsonbProperty("picture")
+    public String getPicDataURL() {
+        if (picture != null){
+            String base64ImageData = Base64.getEncoder().encodeToString(picture);
+            return "data:image/*;base64," + base64ImageData;
+        }
+        return null;
     }
 
     @Override
