@@ -42,6 +42,7 @@ public class StudentServlet extends HttpServlet {
         String address = null;
         String contact = null;
         Part picture = null;
+
         try {
             name = request.getParameter("name");
             address = request.getParameter("address");
@@ -67,7 +68,7 @@ public class StudentServlet extends HttpServlet {
 
             pic:
             if (picture != null) {
-                if (!picture.getContentType().startsWith("image")){
+                if (picture.getContentType() == null || !picture.getContentType().startsWith("image")){
                     errorMsg = "Invalid picture";
                     break pic;
                 }
